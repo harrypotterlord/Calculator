@@ -38,6 +38,8 @@ struct CalculatorBrain {
     private var accumulator: Double?
     var description = ""
     private var formatter = NumberFormatter()
+    private var internalProgram = [AnyObject]()
+    var variableValues: Dictionary<String, Double> = Dictionary<String, Double>()
     
     init () {
         formatter.maximumFractionDigits = 6
@@ -84,6 +86,7 @@ struct CalculatorBrain {
     
     
     mutating func performOperation(_ symbol: String) {
+        internalProgram.append(symbol as AnyObject)
         if let oper = operations[symbol] {
             switch  oper {
             case .constant(let value):
@@ -138,10 +141,25 @@ struct CalculatorBrain {
     mutating func setOperand(_ operand: Double) {
         accumulator = operand
         description += formatter.string(from: NSNumber(value: operand))!
+        internalProgram.append(operand as AnyObject)
+    }
+    
+    var currentVar: String?
+    
+    mutating func setOperand(_ operand: String) {
+        if variableValues.keys.contains(operand) {
+            accumulator = variableValues[operand]
+        } else {
+            variableValues[operand] = 0.0
+        }
+        
+        description += operand
+        internalProgram.append(operand as AnyObject)
     }
     
     var result: Double? {
-        get {
+        mutating get {
+            program = program
             return accumulator
         }
     }
@@ -150,5 +168,36 @@ struct CalculatorBrain {
         get {
             return pbo != nil
         }
+    }
+    
+    typealias  PropertyList = AnyObject
+    
+    var program: PropertyList {
+        get {
+            return internalProgram as CalculatorBrain.PropertyList
+        }
+        set {
+            clear()
+            if let oprArr = newValue as? [AnyObject] {
+                for opr in oprArr {
+                    if let operand = opr as? Double {
+                        setOperand(operand)
+                    } else if let operation = opr as? String {
+                        if variableValues.keys.contains(operation) {
+                            setOperand(operation)
+                        } else {
+                            performOperation(operation)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private mutating func clear() {
+        accumulator = 0
+        pbo = nil
+        internalProgram.removeAll()
+        description = ""
     }
 }

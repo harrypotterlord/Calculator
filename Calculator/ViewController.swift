@@ -60,6 +60,8 @@ class ViewController: UIViewController {
         descriptionLabel.text = brain.resultIsPending! ? brain.description + "...": brain.description + "="
     }
     
+    
+    
     func drawHorizontalLine(from startX: Double, to endX: Double, using color: UIColor) {
         
     }
@@ -78,6 +80,42 @@ class ViewController: UIViewController {
         }
     }
     
+    var storedProgram: CalculatorBrain.PropertyList?
+    
+    @IBAction func save() {
+        storedProgram = brain.program
+    }
 
+    @IBAction func store() {
+        if storedProgram != nil {
+            brain.program = storedProgram as CalculatorBrain.PropertyList
+            if brain.result != nil {
+                displayValue = brain.result!
+            }
+            userInTheMiddleOfTypeing = false;
+            self.descriptionLabel.text = brain.description
+        }
+    }
+    
+    @IBAction func getVariable(_ sender: UIButton) {
+        brain.setOperand((sender.titleLabel?.text!)!)
+        if brain.result != nil {
+            displayValue = brain.result!
+        }
+        
+        userInTheMiddleOfTypeing = false
+    }
+    
+    @IBAction func setVariable(_ sender: UIButton) {
+        let variable = sender.titleLabel!.text!.substring(from: sender.titleLabel!.text!.index(before: sender.titleLabel!.text!.endIndex))
+        if brain.variableValues.keys.contains(variable) {
+            brain.variableValues[variable] = displayValue
+            displayValue = brain.result!
+        }
+        userInTheMiddleOfTypeing = false
+    }
+    
+    
+    
 }
 
