@@ -85,7 +85,7 @@
                                                             <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                         </state>
                                                         <connections>
-                                                            <action selector="backspace:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BsA-jp-rxJ"/>
+                                                            <action selector="undoProcess:" destination="BYZ-38-t0r" eventType="touchUpInside" id="12I-ZW-DTH"/>
                                                         </connections>
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KYa-Dx-dud">

@@ -115,6 +115,22 @@ class ViewController: UIViewController {
         userInTheMiddleOfTypeing = false
     }
     
+    @IBAction func undoProcess(_ sender: UIButton) {
+        if userInTheMiddleOfTypeing {
+            backspace(sender)
+        } else {
+            if var program = brain.program as? [AnyObject] {
+                if !program.isEmpty {
+                    program.removeLast()
+                    brain.program = program as CalculatorBrain.PropertyList
+                    if brain.result != nil {
+                        displayValue = brain.result!
+                    }
+                    self.descriptionLabel.text = brain.description
+                }
+            }
+        }
+    }
     
     
 }
